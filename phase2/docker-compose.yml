@@ -1,0 +1,25 @@
+networks: # define a network
+  mynetwork:
+    driver: bridge
+volumes: # define a volume
+  myvolume:
+    driver: local
+services:
+  redis:
+    image: redislabs/redismod
+    container_name: redis
+    ports:
+      - '6379:6379'  # port mapping
+    volumes:
+      - myvolume:/database
+    networks:
+      - mynetwork
+  web:
+    build: .
+    container_name: web 
+    ports:
+      - '6010:6010'
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
